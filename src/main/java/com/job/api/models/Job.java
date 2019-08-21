@@ -4,9 +4,12 @@ import java.io.Serializable;
 import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -24,20 +27,13 @@ public class Job implements Serializable {
 	
 	private Boolean active;	
 	
+	@ManyToOne
+	@JoinColumn(name = "parent_job")
+	private Job parentJob;
+	
 	@OneToMany(mappedBy="job")
-	private List<Task> tasks;	
+	private List<Task> tasks;
 	
-	
-	public Job() {}
-
-	public Job(Long id, String name, Boolean active) {
-		super();
-		this.id = id;
-		this.name = name;
-		this.active = active;
-		
-	}
-
 	public Long getId() {
 		return id;
 	}
@@ -61,7 +57,15 @@ public class Job implements Serializable {
 	public void setActive(Boolean active) {
 		this.active = active;
 	}
+
 	
+	public Job getParentJob() {
+		return parentJob;
+	}
+
+	public void setParentJob(Job parentJob) {
+		this.parentJob = parentJob;
+	}
 
 	@Override
 	public int hashCode() {
@@ -87,14 +91,5 @@ public class Job implements Serializable {
 			return false;
 		return true;
 	}
-	
-	
-	
-	
-
-	
-	
-	
-	
 
 }
