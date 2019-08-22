@@ -15,38 +15,40 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.job.api.models.Job;
-import com.job.api.repository.JobRepository;
-import com.job.api.service.JobService;
+import com.job.api.models.Task;
+import com.job.api.repository.TaskRepository;
+import com.job.api.service.TaskService;
 
 @RestController
-@RequestMapping("/jobs")
-public class JobResource {
+@RequestMapping(value="/tasks")
+public class TaskResource {
 	
 	@Autowired
-	private JobRepository jobRepository;
+	private TaskRepository taskRepository;
 	
 	@Autowired
-	private JobService jobService;
+	private TaskService taskService;
 	
 	@GetMapping
-	public List<Job> lista(){
-		return jobRepository.findAll();
+	public List<Task> listar() {
+		return taskRepository.findAll();
 	}
 	
-	@GetMapping("/{id}")
-	public ResponseEntity<?> buscarPeloId(@PathVariable Long id) {
-		Job obj = jobService.buscarPeloId(id);
+	@GetMapping(value="/{id}")
+	public ResponseEntity<?> buscarPeloId(@PathVariable Long id){
+		Task obj = taskService.buscarPeloId(id);
 		return ResponseEntity.ok().body(obj);
 	}
 	
 	@PostMapping
-	public ResponseEntity<Job> criar(@RequestBody Job job, HttpServletResponse response) {
-		Job jobSalva = jobRepository.save(job);
+	public ResponseEntity<Task> criar(@RequestBody Task task, HttpServletResponse response){
+		Task taskSalvo = taskRepository.save(task);
 		
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{id}")
-				.buildAndExpand(jobSalva.getId()).toUri();
+				.buildAndExpand(taskSalvo.getId()).toUri();
 		response.setHeader("Location", uri.toASCIIString());
-		return ResponseEntity.created(uri).body(jobSalva);
+		
+		return ResponseEntity.created(uri).body(taskSalvo);
 	}
+	
 }

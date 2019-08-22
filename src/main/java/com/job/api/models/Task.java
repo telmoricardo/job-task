@@ -4,20 +4,25 @@ import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
+@Table(name="task")
 public class Task implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	
 	@Id
 	@GeneratedValue(strategy= GenerationType.IDENTITY)
-	private Integer id;
+	private Long id;
 	
 	private String name;
 	
@@ -27,26 +32,16 @@ public class Task implements Serializable {
 	
 	private Date createdAt;
 	
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="job_id")
+	@JsonBackReference
 	private Job job;
 	
-	public Task() {}
-
-	public Task(Integer id, String name, Integer weight, Boolean completed, Date createdAt) {
-		super();
-		this.id = id;
-		this.name = name;
-		this.weight = weight;
-		this.completed = completed;
-		this.createdAt = createdAt;
-	}
-
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -80,6 +75,14 @@ public class Task implements Serializable {
 
 	public void setCreatedAt(Date createdAt) {
 		this.createdAt = createdAt;
+	}
+
+	public Job getJob() {
+		return job;
+	}
+
+	public void setJob(Job job) {
+		this.job = job;
 	}
 
 	@Override
